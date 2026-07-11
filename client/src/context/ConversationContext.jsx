@@ -24,7 +24,10 @@ const initialState = {
     difficulty: 'N5',
     hintLevel: 'easy',
     showFurigana: true,
-    showEnglish: true
+    showEnglish: true,
+    practicingGrammar: false,
+    grammarLevel: 'N3',
+    grammarPattern: ''
   },
   // Settings panel visibility
   showSettings: false,

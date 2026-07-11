@@ -1,4 +1,5 @@
 import { useConversation, useConversationDispatch } from '../context/ConversationContext';
+import { GRAMMAR_PATTERNS } from '../data/grammarPatterns';
 
 const TOPICS = [
   'Daily Life',
@@ -124,7 +125,76 @@ export default function SettingsPanel() {
             aria-label="Toggle English translation"
           />
         </div>
+
+        {/* Grammar Practice Toggle */}
+        <div className="flex items-center justify-between sm:justify-start gap-3">
+          <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+            Practice Grammar
+          </label>
+          <button
+            className={`toggle-switch ${settings.practicingGrammar ? 'active' : ''}`}
+            onClick={() => {
+              const isActive = !settings.practicingGrammar;
+              updateSetting('practicingGrammar', isActive);
+              // Auto-select first pattern if turning on and none selected
+              if (isActive && !settings.grammarPattern) {
+                const patterns = GRAMMAR_PATTERNS[settings.grammarLevel || 'N3'];
+                if (patterns && patterns.length > 0) {
+                  updateSetting('grammarPattern', patterns[0].pattern);
+                }
+              }
+            }}
+            aria-label="Toggle grammar practice"
+          />
+        </div>
       </div>
+
+      {/* Grammar Options (Conditional) */}
+      {settings.practicingGrammar && (
+        <div className="mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ borderColor: 'var(--glass-border)' }}>
+          {/* Grammar Level */}
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Grammar Level
+            </label>
+            <select
+              value={settings.grammarLevel}
+              onChange={(e) => {
+                const newLevel = e.target.value;
+                updateSetting('grammarLevel', newLevel);
+                // Reset selected pattern to the first of the new level
+                const patterns = GRAMMAR_PATTERNS[newLevel];
+                if (patterns && patterns.length > 0) {
+                  updateSetting('grammarPattern', patterns[0].pattern);
+                }
+              }}
+              className="input-glass"
+            >
+              {DIFFICULTIES.map(d => (
+                <option key={d.value} value={d.value}>{d.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Grammar Pattern */}
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+              Grammar Pattern
+            </label>
+            <select
+              value={settings.grammarPattern}
+              onChange={(e) => updateSetting('grammarPattern', e.target.value)}
+              className="input-glass"
+            >
+              {(GRAMMAR_PATTERNS[settings.grammarLevel] || []).map(p => (
+                <option key={p.pattern} value={p.pattern}>
+                  {p.pattern} ({p.meaning})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

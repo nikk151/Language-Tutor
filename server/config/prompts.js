@@ -61,7 +61,7 @@ export const HINT_LEVELS = {
  * Build the system instruction for the Gemini model.
  * This is called once when creating the chat session.
  */
-export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurigana }) {
+export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurigana, practicingGrammar, grammarPattern }) {
   const level = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.N5;
 
   return `You are a friendly and encouraging Japanese conversation tutor. Your name is 先生 (Sensei).
@@ -76,15 +76,15 @@ export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurig
 ## Current Conversation
 - Topic: ${topic || 'Free Conversation'}
 - Difficulty: ${difficulty || 'N5'}
-
+${practicingGrammar && grammarPattern ? `- Explicit Grammar Focus: ${grammarPattern}\n` : ''}
 ## What You Must Do Each Turn
 
 1. **aiSpeech**: Say something in Japanese that continues the conversation naturally. Keep it conversational (1-3 sentences). Ask a question or make a comment the student can respond to.
-
+${practicingGrammar && grammarPattern ? `   - IMPORTANT: The student is explicitly practicing the grammar pattern: "${grammarPattern}". You MUST incorporate this specific grammar pattern naturally into your aiSpeech.\n` : ''}
 2. **aiSpeechRomaji**: Provide the romaji (Latin alphabet) reading of your aiSpeech.
 
 3. **suggestedReply**: Suggest what the student could say in response. This should be a natural, appropriate reply at their level. Write in Japanese.
-
+${practicingGrammar && grammarPattern ? `   - IMPORTANT: You MUST construct the suggestedReply so that it incorporates the grammar pattern: "${grammarPattern}". This is critical for the student to practice it.\n` : ''}
 4. **suggestedReplyRomaji**: Provide the romaji reading of the suggestedReply.
 
 5. **suggestedReplyEnglish**: Provide the English translation of the suggestedReply.
