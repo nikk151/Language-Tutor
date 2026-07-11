@@ -18,10 +18,10 @@ export default function MicrophoneButton({ isListening, onToggle, isSupported })
           relative w-20 h-20 rounded-full flex items-center justify-center
           transition-all duration-300 ease-out
           ${isListening
-            ? 'bg-gradient-to-br from-rose-500 to-pink-600 mic-recording scale-110'
+            ? 'bg-gradient-to-br from-rose-500 to-pink-600 mic-recording scale-110 opacity-100'
             : isDisabled
-              ? 'bg-gray-700/50 cursor-not-allowed'
-              : 'bg-gradient-to-br from-rose-500/80 to-pink-600/80 hover:from-rose-500 hover:to-pink-600 hover:scale-105 active:scale-95'
+              ? 'bg-gray-700/50 cursor-not-allowed opacity-40'
+              : 'bg-gradient-to-br from-rose-500/80 to-pink-600/80 hover:from-rose-500 hover:to-pink-600 hover:scale-105 active:scale-95 opacity-50 hover:opacity-100'
           }
         `}
         style={{

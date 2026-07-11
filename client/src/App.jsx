@@ -142,7 +142,18 @@ function AppContent() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isListening, status]);
+  }, [isListening, status, handleToggleMic]);
+
+  // Auto-scroll to the bottom of the page when a new AI response arrives or status changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [state.history.length, status, aiMessage]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -176,7 +187,7 @@ function AppContent() {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 px-4 pb-40 max-w-2xl mx-auto w-full space-y-4 relative z-10">
+      <main className="flex-1 px-4 pb-64 max-w-2xl mx-auto w-full space-y-4 relative z-10">
         {/* Settings Panel */}
         <SettingsPanel />
 
@@ -193,12 +204,12 @@ function AppContent() {
         <div className="space-y-4 mb-8">
           <AISpeechCard onSpeak={handleSpeak} />
           
+          <SuggestedReply />
+
           {/* Only show transcript card if there is transcript data or listening */}
           {(state.transcript || interimTranscript || status === 'listening') && (
             <TranscriptCard interimTranscript={interimTranscript} />
           )}
-          
-          <SuggestedReply />
         </div>
 
         {/* Error display */}
