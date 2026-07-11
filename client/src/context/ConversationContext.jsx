@@ -20,7 +20,7 @@ const initialState = {
   history: [],
   // Settings
   settings: {
-    topic: 'Daily Life',
+    topic: 'Free Conversation',
     difficulty: 'N5',
     hintLevel: 'easy',
     showFurigana: true,
