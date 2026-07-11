@@ -61,8 +61,10 @@ export const HINT_LEVELS = {
  * Build the system instruction for the Gemini model.
  * This is called once when creating the chat session.
  */
-export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurigana, practicingGrammar, grammarPattern }) {
-  const level = DIFFICULTY_LEVELS[difficulty] || DIFFICULTY_LEVELS.N5;
+export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurigana, practicingGrammar, grammarLevel, grammarPattern }) {
+  // If practicing grammar, override the base difficulty to match the grammar level
+  const effectiveDifficulty = practicingGrammar && grammarLevel ? grammarLevel : difficulty;
+  const level = DIFFICULTY_LEVELS[effectiveDifficulty] || DIFFICULTY_LEVELS.N5;
 
   return `You are a friendly and encouraging Japanese conversation tutor. Your name is 先生 (Sensei).
 

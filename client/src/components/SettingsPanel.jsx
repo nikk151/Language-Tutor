@@ -79,6 +79,9 @@ export default function SettingsPanel() {
             value={settings.difficulty}
             onChange={(e) => updateSetting('difficulty', e.target.value)}
             className="input-glass"
+            disabled={settings.practicingGrammar}
+            style={{ opacity: settings.practicingGrammar ? 0.5 : 1 }}
+            title={settings.practicingGrammar ? "Overridden by Grammar Level" : ""}
           >
             {DIFFICULTIES.map(d => (
               <option key={d.value} value={d.value}>{d.label}</option>
