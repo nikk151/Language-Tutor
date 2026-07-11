@@ -4,7 +4,7 @@ import { useConversation } from '../context/ConversationContext';
  * MicrophoneButton - Large circular mic button with visual feedback.
  * Press to start recording, release/click again to stop.
  */
-export default function MicrophoneButton({ isListening, onToggle, isSupported }) {
+export default function MicrophoneButton({ isListening, onStart, onStop, isSupported }) {
   const { status } = useConversation();
   const isDisabled = status === 'loading' || status === 'processing' || !isSupported;
 
@@ -12,7 +12,13 @@ export default function MicrophoneButton({ isListening, onToggle, isSupported })
     <div className="flex flex-col items-center gap-3">
       {/* Microphone button */}
       <button
-        onClick={onToggle}
+        onMouseDown={onStart}
+        onMouseUp={onStop}
+        onMouseLeave={onStop}
+        onTouchStart={onStart}
+        onTouchEnd={onStop}
+        onTouchCancel={onStop}
+        onContextMenu={(e) => e.preventDefault()}
         disabled={isDisabled}
         className={`
           relative w-20 h-20 rounded-full flex items-center justify-center
@@ -29,7 +35,7 @@ export default function MicrophoneButton({ isListening, onToggle, isSupported })
             ? '0 0 40px rgba(244, 63, 94, 0.4)'
             : '0 8px 24px rgba(0, 0, 0, 0.3)'
         }}
-        title={!isSupported ? 'Speech recognition not supported in this browser' : isListening ? 'Stop recording' : 'Start recording (or press Space)'}
+        title={!isSupported ? 'Speech recognition not supported in this browser' : isListening ? 'Release to stop recording' : 'Hold to record (or hold Space)'}
       >
         {/* Mic icon */}
         {isListening ? (
@@ -54,10 +60,10 @@ export default function MicrophoneButton({ isListening, onToggle, isSupported })
         {!isSupported
           ? 'Not supported'
           : isListening
-            ? 'Listening... (click to stop)'
+            ? 'Listening... (release to stop)'
             : status === 'processing'
               ? 'Processing...'
-              : 'Tap to speak'
+              : 'Hold to speak'
         }
       </span>
     </div>

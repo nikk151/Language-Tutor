@@ -70,16 +70,23 @@ function AppContent() {
     }
   }, [settings, dispatch, stopSpeaking, resetTranscript]);
 
-  // Toggle microphone
-  const handleToggleMic = useCallback(() => {
-    if (isListening) {
-      stopListening();
-    } else if (status === 'ready') {
+  // Start listening (Push-to-talk)
+  const handleStartMic = useCallback((e) => {
+    if (e && e.preventDefault) e.preventDefault(); // prevent touch from firing mouse events
+    if (!isListening && status === 'ready') {
       stopSpeaking();
       dispatch({ type: 'SET_LISTENING' });
       startListening();
     }
-  }, [isListening, status, startListening, stopListening, stopSpeaking, dispatch]);
+  }, [isListening, status, startListening, stopSpeaking, dispatch]);
+
+  // Stop listening (Push-to-talk release)
+  const handleStopMic = useCallback((e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (isListening) {
+      stopListening();
+    }
+  }, [isListening, stopListening]);
 
   // Replay AI speech
   const handleReplay = useCallback(() => {
@@ -131,18 +138,29 @@ function AppContent() {
     }
   }, [isListening, sttTranscript, status, dispatch, handleSendResponse]);
 
-  // Keyboard shortcut: Space to toggle recording
+  // Keyboard shortcut: Hold Space to record
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (e.code === 'Space' && !e.repeat && !e.target.closest('input, select, textarea, button')) {
+        e.preventDefault();
+        handleStartMic();
+      }
+    };
+
+    const handleKeyUp = (e) => {
       if (e.code === 'Space' && !e.target.closest('input, select, textarea, button')) {
         e.preventDefault();
-        handleToggleMic();
+        handleStopMic();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isListening, status, handleToggleMic]);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [handleStartMic, handleStopMic]);
 
   // Auto-scroll to the bottom of the page when a new AI response arrives or status changes
   useEffect(() => {
@@ -239,7 +257,8 @@ function AppContent() {
             <div className="flex justify-center">
               <MicrophoneButton
                 isListening={isListening}
-                onToggle={handleToggleMic}
+                onStart={handleStartMic}
+                onStop={handleStopMic}
                 isSupported={sttSupported}
               />
             </div>
