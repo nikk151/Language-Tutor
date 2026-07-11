@@ -2,6 +2,7 @@ import { useConversation, useConversationDispatch } from '../context/Conversatio
 import { GRAMMAR_PATTERNS } from '../data/grammarPatterns';
 
 const TOPICS = [
+  'Free Conversation',
   'Daily Life',
   'Travel & Directions',
   'Food & Restaurants',
@@ -16,7 +17,7 @@ const TOPICS = [
   'Technology',
   'Culture & Traditions',
   'Sports & Exercise',
-  'Free Conversation'
+  
 ];
 
 const DIFFICULTIES = [
