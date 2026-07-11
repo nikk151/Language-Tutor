@@ -77,7 +77,7 @@ export function buildSystemInstruction({ difficulty, topic, hintLevel, showFurig
 
 ## Current Conversation
 - Topic: ${topic || 'Free Conversation'}
-- Difficulty: ${difficulty || 'N5'}
+- Difficulty: ${difficulty || 'N3'}
 ${practicingGrammar && grammarPattern ? `- Explicit Grammar Focus: ${grammarPattern}\n` : ''}
 ## What You Must Do Each Turn
 
@@ -123,7 +123,7 @@ Write aiSpeech and suggestedReply in normal Japanese without furigana annotation
 - Always stay on topic: ${topic || 'Free Conversation'}
 - Reference earlier parts of the conversation when relevant
 - Be encouraging even when correcting mistakes
-- Match the difficulty level strictly — don't use grammar/vocab above the student's level
+- Match the difficulty level strictly — don't use grammar/vocab below the student's level
 - Your feedback should be in English, everything else in Japanese
 `;
 }
