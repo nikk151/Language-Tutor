@@ -14,14 +14,14 @@ export default function AISpeechCard({ onSpeak, message }) {
 
   // Auto-speak when new AI message arrives (only for current message)
   useEffect(() => {
-    if (!isHistorical && aiMessage?.speech && status === 'ready' && onSpeak) {
+    if (!isHistorical && aiMessage?.speech && status === 'ready' && onSpeak && settings.autoPlayVoice) {
       // Small delay to let the UI render first
       const timer = setTimeout(() => {
         onSpeak(aiMessage.speech);
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [aiMessage?.speech, isHistorical, status]);
+  }, [aiMessage?.speech, isHistorical, status, settings.autoPlayVoice]);
 
   // Loading state (only for current message)
   if (!isHistorical && (status === 'loading' || status === 'processing')) {

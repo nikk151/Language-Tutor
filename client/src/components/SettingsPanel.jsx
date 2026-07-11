@@ -153,6 +153,40 @@ export default function SettingsPanel() {
         </div>
       </div>
 
+      {/* Playback Controls */}
+      <div className="mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ borderColor: 'var(--glass-border)' }}>
+        {/* Auto-play Voice Toggle */}
+        <div className="flex items-center justify-between sm:justify-start gap-3">
+          <label className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
+            Auto-play Voice
+          </label>
+          <button
+            className={`toggle-switch ${settings.autoPlayVoice ? 'active' : ''}`}
+            onClick={() => updateSetting('autoPlayVoice', !settings.autoPlayVoice)}
+            aria-label="Toggle auto-play voice"
+          />
+        </div>
+
+        {/* Voice Speed */}
+        <div>
+          <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+            Voice Speed
+          </label>
+          <select
+            value={settings.voiceSpeed}
+            onChange={(e) => updateSetting('voiceSpeed', parseFloat(e.target.value))}
+            className="input-glass"
+          >
+            <option value="0.5">0.5x (Very Slow)</option>
+            <option value="0.7">0.7x (Slow)</option>
+            <option value="0.9">0.9x (Recommended)</option>
+            <option value="1.0">1.0x (Normal)</option>
+            <option value="1.2">1.2x (Fast)</option>
+            <option value="1.5">1.5x (Very Fast)</option>
+          </select>
+        </div>
+      </div>
+
       {/* Grammar Options (Conditional) */}
       {settings.practicingGrammar && (
         <div className="mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ borderColor: 'var(--glass-border)' }}>

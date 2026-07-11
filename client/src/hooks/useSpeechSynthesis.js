@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { useConversation } from '../context/ConversationContext';
 
 /**
  * Custom hook for browser Speech Synthesis (TTS).
@@ -10,6 +11,9 @@ export default function useSpeechSynthesis() {
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const utteranceRef = useRef(null);
+
+  const context = useConversation();
+  const settings = context?.settings;
 
   // Load voices (they load async in some browsers)
   useEffect(() => {
@@ -59,7 +63,7 @@ export default function useSpeechSynthesis() {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     utterance.lang = 'ja-JP';
-    utterance.rate = 0.9; // Slightly slower for learners
+    utterance.rate = settings?.voiceSpeed || 0.9; // Dynamic speed from settings
     utterance.pitch = 1;
     utterance.volume = 1;
 

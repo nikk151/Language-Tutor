@@ -27,7 +27,9 @@ const initialState = {
     showEnglish: true,
     practicingGrammar: false,
     grammarLevel: 'N3',
-    grammarPattern: ''
+    grammarPattern: '',
+    autoPlayVoice: true,
+    voiceSpeed: 0.9
   },
   // Settings panel visibility
   showSettings: false,
