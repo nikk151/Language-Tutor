@@ -34,38 +34,6 @@ function AppContent() {
     isSupported: ttsSupported
   } = useSpeechSynthesis();
 
-  // Update transcript in state when STT changes
-  useEffect(() => {
-    if (sttTranscript) {
-      dispatch({ type: 'SET_TRANSCRIPT', payload: sttTranscript });
-    }
-  }, [sttTranscript, dispatch]);
-
-  // When recording stops, either send response or reset to ready
-  useEffect(() => {
-    if (!isListening && status === 'listening') {
-      if (sttTranscript) {
-        handleSendResponse(sttTranscript);
-      } else {
-        // Mic turned off without capturing anything
-        dispatch({ type: 'SET_READY' });
-      }
-    }
-  }, [isListening, sttTranscript, status, dispatch, handleSendResponse]);
-
-  // Keyboard shortcut: Space to toggle recording
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.code === 'Space' && !e.target.closest('input, select, textarea, button')) {
-        e.preventDefault();
-        handleToggleMic();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isListening, status]);
-
   // Start a new conversation
   const handleStart = useCallback(async () => {
     dispatch({ type: 'SET_LOADING' });
@@ -143,6 +111,38 @@ function AppContent() {
       speak(text);
     }
   }, [ttsSupported, speak]);
+
+  // Update transcript in state when STT changes
+  useEffect(() => {
+    if (sttTranscript) {
+      dispatch({ type: 'SET_TRANSCRIPT', payload: sttTranscript });
+    }
+  }, [sttTranscript, dispatch]);
+
+  // When recording stops, either send response or reset to ready
+  useEffect(() => {
+    if (!isListening && status === 'listening') {
+      if (sttTranscript) {
+        handleSendResponse(sttTranscript);
+      } else {
+        // Mic turned off without capturing anything
+        dispatch({ type: 'SET_READY' });
+      }
+    }
+  }, [isListening, sttTranscript, status, dispatch, handleSendResponse]);
+
+  // Keyboard shortcut: Space to toggle recording
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'Space' && !e.target.closest('input, select, textarea, button')) {
+        e.preventDefault();
+        handleToggleMic();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isListening, status]);
 
   return (
     <div className="min-h-screen flex flex-col">
