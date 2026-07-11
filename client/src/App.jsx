@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { ConversationProvider, useConversation, useConversationDispatch } from './context/ConversationContext';
 import AISpeechCard from './components/AISpeechCard';
 import SuggestedReply from './components/SuggestedReply';
@@ -16,6 +16,7 @@ function AppContent() {
   const state = useConversation();
   const dispatch = useConversationDispatch();
   const { settings, status, aiMessage } = state;
+  const [isHoldingMic, setIsHoldingMic] = useState(false);
 
   const {
     isListening,
@@ -73,16 +74,19 @@ function AppContent() {
   // Start listening (Push-to-talk)
   const handleStartMic = useCallback((e) => {
     if (e && e.preventDefault) e.preventDefault(); // prevent touch from firing mouse events
+    setIsHoldingMic(true);
     if (!isListening && status === 'ready') {
       stopSpeaking();
+      resetTranscript();
       dispatch({ type: 'SET_LISTENING' });
       startListening();
     }
-  }, [isListening, status, startListening, stopSpeaking, dispatch]);
+  }, [isListening, status, startListening, stopSpeaking, resetTranscript, dispatch]);
 
   // Stop listening (Push-to-talk release)
   const handleStopMic = useCallback((e) => {
     if (e && e.preventDefault) e.preventDefault();
+    setIsHoldingMic(false);
     if (isListening) {
       stopListening();
     }
@@ -126,9 +130,18 @@ function AppContent() {
     }
   }, [sttTranscript, dispatch]);
 
-  // When recording stops, either send response or reset to ready
+  // Restart listening if STT drops while button is held
   useEffect(() => {
-    if (!isListening && status === 'listening') {
+    if (isHoldingMic && !isListening && status === 'listening') {
+      try {
+        startListening();
+      } catch (e) {}
+    }
+  }, [isHoldingMic, isListening, status, startListening]);
+
+  // When recording stops AND the user is no longer holding the mic
+  useEffect(() => {
+    if (!isHoldingMic && !isListening && status === 'listening') {
       if (sttTranscript) {
         handleSendResponse(sttTranscript);
       } else {
@@ -136,7 +149,7 @@ function AppContent() {
         dispatch({ type: 'SET_READY' });
       }
     }
-  }, [isListening, sttTranscript, status, dispatch, handleSendResponse]);
+  }, [isHoldingMic, isListening, sttTranscript, status, dispatch, handleSendResponse]);
 
   // Keyboard shortcut: Hold Space to record
   useEffect(() => {
@@ -256,7 +269,7 @@ function AppContent() {
           {status !== 'idle' && (
             <div className="flex justify-center">
               <MicrophoneButton
-                isListening={isListening}
+                isListening={isHoldingMic || isListening}
                 onStart={handleStartMic}
                 onStop={handleStopMic}
                 isSupported={sttSupported}

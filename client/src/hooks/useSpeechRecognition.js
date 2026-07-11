@@ -70,8 +70,7 @@ export default function useSpeechRecognition() {
 
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
-      setTranscript('');
-      setInterimTranscript('');
+
       try {
         recognitionRef.current.start();
         setIsListening(true);
