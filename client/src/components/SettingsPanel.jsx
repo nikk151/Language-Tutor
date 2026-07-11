@@ -172,18 +172,35 @@ export default function SettingsPanel() {
           <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
             Voice Speed
           </label>
-          <select
-            value={settings.voiceSpeed}
-            onChange={(e) => updateSetting('voiceSpeed', parseFloat(e.target.value))}
-            className="input-glass"
-          >
-            <option value="0.5">0.5x (Very Slow)</option>
-            <option value="0.7">0.7x (Slow)</option>
-            <option value="0.9">0.9x (Recommended)</option>
-            <option value="1.0">1.0x (Normal)</option>
-            <option value="1.2">1.2x (Fast)</option>
-            <option value="1.5">1.5x (Very Fast)</option>
-          </select>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                const currentSpeed = settings.voiceSpeed || 0.9;
+                const newSpeed = Math.max(0.4, parseFloat((currentSpeed - 0.05).toFixed(2)));
+                updateSetting('voiceSpeed', newSpeed);
+              }}
+              className="btn-glass flex items-center justify-center w-10 h-10 font-bold text-lg"
+              style={{ padding: 0 }}
+              title="Decrease speed by 0.05x"
+            >
+              -
+            </button>
+            <span className="text-sm font-semibold w-16 text-center" style={{ color: 'var(--text-primary)' }}>
+              {(settings.voiceSpeed || 0.9).toFixed(2)}x
+            </span>
+            <button
+              onClick={() => {
+                const currentSpeed = settings.voiceSpeed || 0.9;
+                const newSpeed = Math.min(2.0, parseFloat((currentSpeed + 0.05).toFixed(2)));
+                updateSetting('voiceSpeed', newSpeed);
+              }}
+              className="btn-glass flex items-center justify-center w-10 h-10 font-bold text-lg"
+              style={{ padding: 0 }}
+              title="Increase speed by 0.05x"
+            >
+              +
+            </button>
+          </div>
         </div>
       </div>
 
