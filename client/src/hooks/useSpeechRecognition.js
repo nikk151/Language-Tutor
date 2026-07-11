@@ -17,7 +17,7 @@ export default function useSpeechRecognition() {
       setIsSupported(true);
       const recognition = new SpeechRecognition();
       recognition.lang = 'ja-JP';
-      recognition.continuous = false;
+      recognition.continuous = true;
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
 
