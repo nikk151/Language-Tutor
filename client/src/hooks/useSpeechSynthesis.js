@@ -80,7 +80,7 @@ export default function useSpeechSynthesis() {
 
     utteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [isSupported, selectedVoice]);
+  }, [isSupported, selectedVoice, settings?.voiceSpeed]);
 
   const stop = useCallback(() => {
     if (isSupported) {
