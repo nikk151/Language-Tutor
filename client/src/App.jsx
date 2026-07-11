@@ -235,13 +235,15 @@ function AppContent() {
       }}>
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-6 space-y-4">
           {/* Microphone */}
-          <div className="flex justify-center">
-            <MicrophoneButton
-              isListening={isListening}
-              onToggle={handleToggleMic}
-              isSupported={sttSupported}
-            />
-          </div>
+          {status !== 'idle' && (
+            <div className="flex justify-center">
+              <MicrophoneButton
+                isListening={isListening}
+                onToggle={handleToggleMic}
+                isSupported={sttSupported}
+              />
+            </div>
+          )}
 
           {/* Control buttons */}
           <ControlBar
