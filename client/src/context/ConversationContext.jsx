@@ -94,6 +94,9 @@ function conversationReducer(state, action) {
     case 'SET_LISTENING':
       return { ...state, status: 'listening' };
 
+    case 'SET_READY':
+      return { ...state, status: 'ready' };
+
     case 'SET_PROCESSING':
       return { ...state, status: 'processing' };
 

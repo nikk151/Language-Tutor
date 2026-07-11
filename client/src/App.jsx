@@ -41,12 +41,17 @@ function AppContent() {
     }
   }, [sttTranscript, dispatch]);
 
-  // When recording stops and we have a transcript, send it to the API
+  // When recording stops, either send response or reset to ready
   useEffect(() => {
-    if (!isListening && sttTranscript && status === 'listening') {
-      handleSendResponse(sttTranscript);
+    if (!isListening && status === 'listening') {
+      if (sttTranscript) {
+        handleSendResponse(sttTranscript);
+      } else {
+        // Mic turned off without capturing anything
+        dispatch({ type: 'SET_READY' });
+      }
     }
-  }, [isListening]);
+  }, [isListening, sttTranscript, status, dispatch, handleSendResponse]);
 
   // Keyboard shortcut: Space to toggle recording
   useEffect(() => {
